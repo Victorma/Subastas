@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{870276BB-676D-A881-1552-2715ED5CA2E9}</ProjectGuid>
+	<ProjectGuid>{714FF6B7-FD25-A060-9C20-47AF531EC4A0}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\AreaEditor.cs" />
+     <Compile Include="Assets\Editor\ItemEditor.cs" />
      <Compile Include="Assets\Futile\Rix\Editor\RXProfilerEditor.cs" />
      <Compile Include="Assets\Futile\Rix\Editor\RXWatcherLinkEditor.cs" />
      <None Include="Assets\FutileDemos\Resources\Atlases\BananaLargeAtlas_Scale4.txt" />
@@ -90,7 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{70CBEF9F-3788-435C-0938-07ED197E49EA}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{E049C1DB-787F-D879-F2EB-7881C3A070E6}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
