@@ -50,14 +50,21 @@
      <Compile Include="Assets\Editor\ItemEditor.cs" />
      <Compile Include="Assets\Futile\Rix\Editor\RXProfilerEditor.cs" />
      <Compile Include="Assets\Futile\Rix\Editor\RXWatcherLinkEditor.cs" />
+     <Compile Include="Assets\Pixelplacement\ColliderButton\Editor\ColliderButtonEditor.cs" />
+     <Compile Include="Assets\Pixelplacement\MethodFire\Editor\MethodFireEditor.cs" />
+     <None Include="Assets\Pixelplacement\ColliderButton\Example\Shaders\ReflectiveBumpSpecularRim.shader" />
      <None Include="Assets\FutileDemos\Resources\Atlases\BananaLargeAtlas_Scale4.txt" />
      <None Include="Assets\Futile\Resources\Shaders\AdditiveColor.shader" />
      <None Include="Assets\Futile\Resources\Shaders\Additive.shader" />
      <None Include="Assets\FutileDemos\Resources\Atlases\GameAtlas_Scale1.txt" />
      <None Include="Assets\FutileDemos\Resources\Atlases\BananaLargeAtlas_Scale1.txt" />
+     <None Include="Assets\Pixelplacement\ColliderButton\Example\Shaders\TextureRim.shader" />
+     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\FutileDemos\Resources\Atlases\BananaGameAtlas_Scale4.txt" />
      <None Include="Assets\FutileDemos\Resources\Atlases\BananaLargeAtlas_Scale2.txt" />
      <None Include="Assets\FutileDemos\Resources\Atlases\FranchiseFont_Scale2.txt" />
+     <None Include="Assets\Plugins\whydoidoit.com\license.txt" />
+     <None Include="Assets\Pixelplacement\ColliderButton\Example\Shaders\ShadowProjection.shader" />
      <None Include="Assets\FutileDemos\Resources\Atlases\GameAtlas_Scale2.txt" />
      <None Include="Assets\FutileDemos\Resources\Atlases\FranchiseFont_Scale1.txt" />
      <None Include="Assets\FutileDemos\Resources\Atlases\GameAtlas_Scale4.txt" />
@@ -66,6 +73,7 @@
      <None Include="Assets\FutileDemos\Resources\Atlases\FranchiseFont_Scale4.txt" />
      <None Include="Assets\FutileDemos\Resources\Atlases\BananaGameAtlas_Scale1.txt" />
      <None Include="Assets\Futile\Resources\Shaders\Basic.shader" />
+     <None Include="Assets\UnitySerializer\readme.txt" />
      <None Include="Assets\Futile\Resources\Shaders\Solid.shader" />
  <Reference Include="GoKit">
  <HintPath>Assets\Futile\ThirdParty\GoKit.dll</HintPath>
@@ -90,8 +98,16 @@
  </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{5BAB2756-DB8B-0B51-5FC9-156323BC655D}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{DD7C9380-937F-DD4D-41BC-FAF7A5B36250}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{E049C1DB-787F-D879-F2EB-7881C3A070E6}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-UnityScript.unityproj">
+      <Project>{2BC85C23-1669-FE04-AED0-1D7C84EA86F8}</Project>      <Name>Assembly-UnityScript</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
+      <Project>{C0B66705-5F89-DDC4-0EF0-F67BC7947885}</Project>      <Name>Assembly-CSharp-Editor-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
