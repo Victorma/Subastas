@@ -31,6 +31,7 @@ public class AreaEditor : Editor {
 
 		if(selectingArea == 2){
 			end = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition).origin;
+			end = area.transform.InverseTransformPoint(end);
 			end = new Vector3(end.x,end.y, -5);
 			if(Event.current.type == EventType.mouseDown){
 				selectingArea = 3;
@@ -41,6 +42,7 @@ public class AreaEditor : Editor {
 			if(Event.current.type == EventType.mouseDown){
 
 				start = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition).origin;
+				start = area.transform.InverseTransformPoint(start);
 				start = new Vector3(start.x,start.y, -5);
 				selectingArea = 2;
 			}
@@ -49,16 +51,21 @@ public class AreaEditor : Editor {
 
 		
 		if(selectingArea == 3){
+
 			area.area = new Rect(start.x, start.y, end.x - start.x, end.y-start.y);
 			selectingArea = 0;
 		}
 
 		if(selectingArea > 1){
+
+			Vector3 wstart = area.transform.TransformPoint(start);
+			Vector3 wend = area.transform.TransformPoint(end);
+
 			Vector3[] points = new Vector3[]{
-				start,
-				new Vector3(start.x, end.y, start.z),
-				end,
-				new Vector3(end.x, start.y, start.z)
+				wstart,
+				new Vector3(wstart.x, wend.y, wstart.z),
+				wend,
+				new Vector3(wend.x, wstart.y, wstart.z)
 			};
 
 			Handles.DrawSolidRectangleWithOutline(points, new Color(Color.blue.r, Color.blue.g, Color.blue.b, 0.4f), Color.yellow);
@@ -70,7 +77,10 @@ public class AreaEditor : Editor {
 
 			Vector3 start = new Vector3(area.area.x, area.area.y, area.transform.position.z);
 			Vector3 end = new Vector3(area.area.x + area.area.width, area.area.y + area.area.height, area.transform.position.z);
-			
+
+			start = area.transform.TransformPoint(start);
+			end = area.transform.TransformPoint(end);
+
 			Vector3[] points = new Vector3[]{
 				start,
 				new Vector3(start.x, end.y, start.z),

@@ -25,6 +25,8 @@ public class PujadorScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(this.enabled){
+			if(!people.Moving)
+				GetComponent<Animator>().Play("south");
 
 
 			//Item item = Auction.current.item;
