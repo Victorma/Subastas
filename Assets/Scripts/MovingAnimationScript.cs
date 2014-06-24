@@ -20,11 +20,11 @@ public class MovingAnimationScript : MonoBehaviour {
 			// TODO parado
 		}else{
 			Vector3 diferencia = _myTransform.position - lastPos;
-			if(Mathf.Abs(diferencia.x) > Mathf.Abs(diferencia.y)){
+			if(Mathf.Abs(diferencia.x) > Mathf.Abs(diferencia.z)){
 				if(diferencia.x > 0) _myAnimator.Play("east");
 				else _myAnimator.Play("west");
 			}else{
-				if(diferencia.y > 0) _myAnimator.Play("north");
+				if(diferencia.z > 0) _myAnimator.Play("north");
 				else _myAnimator.Play("south");
 			}
 		}

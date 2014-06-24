@@ -5,12 +5,37 @@ public class Auction : MonoBehaviour {
 
 	public static Auction currentAuction;
 
-	public AuctionState state;
+
 	public Item[] items;
 	public int currentSlot;
 
 	public enum AuctionState {
-		BuyingObjects, SpendingPubli, Auctioning 
+		Nothing/*, BuyingObjects, SpendingPubli*/, Selecting, Auctioning, Buying 
+	}
+
+	private AuctionState state;
+	public AuctionState State {
+		get { return state; }
+		set {
+			if(GetComponent(state.ToString()+"Script")!=null);
+				Destroy(GetComponent(state.ToString()+"Script"));
+
+			state = value;
+			this.gameObject.AddComponent(State.ToString()+"Script");
+		}
+	}
+
+	private AuctionState[] states = new AuctionState[]{
+		AuctionState.Nothing,
+		AuctionState.Selecting,
+		AuctionState.Auctioning,
+		AuctionState.Buying
+	};
+
+	public void nextState(){
+		int pos = (int) State;
+		pos = (pos+1)%states.Length;
+		State = states[pos];
 	}
 
 	public Auction current {
@@ -18,20 +43,21 @@ public class Auction : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
-		if(currentAuction == null){
+	void Awake () {
+		if(currentAuction == null){	
 			currentAuction = this;
-			state = AuctionState.BuyingObjects;
-		}else
-			GameObject.Destroy(this);
+			DontDestroyOnLoad(this.gameObject);
+		}
+		else						GameObject.Destroy(this);
 	}
 
 	public Item getAuctioningItem(){
-		return null;
+		return items[currentSlot];
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	void Start(){
+		State = AuctionState.Buying;
 	}
+
+
 }

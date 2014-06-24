@@ -19,8 +19,8 @@ public class WalkingGuysCreator : MonoBehaviour {
 				int person = Random.Range(0, prefabs.Count);
 				GameObject newGo = GameObject.Instantiate(prefabs[person])as GameObject;
 
-				float x = Random.Range(areaProvider.area.x, areaProvider.area.x + areaProvider.area.width);
-				float y = Random.Range(areaProvider.area.y, areaProvider.area.y + areaProvider.area.height);
+				float x = 0;//Random.Range(areaProvider.area.x, areaProvider.area.x + areaProvider.area.width);
+				float y = 0;//Random.Range(areaProvider.area.y, areaProvider.area.y + areaProvider.area.height);
 
 				newGo.transform.position = new Vector3(x,y,areaProvider.transform.position.z);
 			}
