@@ -30,13 +30,13 @@ public class AuctioningScript : MonoBehaviour {
 			if(!people[person].GetComponent<PujadorScript>().enabled)
 				people.RemoveAt (person);
 			else{
-				people[person].gameObject.SetActive(true);
 				people[person].transform.position = GameObject.FindObjectOfType<AuctionArea>().doorPosition.position;
 				people[person].GetComponent<NavMeshAgent>().avoidancePriority = avoidance;
 				avoidance++;
 				
 				people[person].moveTo(chairs[chair].transform.TransformPoint(chairs[chair].GetComponent<AreaProvider>().center));
-				
+				people[person].gameObject.SetActive(true);
+
 				people.RemoveAt (person);
 				chairs.RemoveAt (chair);
 				

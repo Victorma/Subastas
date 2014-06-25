@@ -43,7 +43,7 @@ public class ItemBottomMenu : MonoBehaviour {
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
 		transform.position = guipoint;
-		
+
 		GUI.matrix = transform.localToWorldMatrix;
 
 		GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondo);

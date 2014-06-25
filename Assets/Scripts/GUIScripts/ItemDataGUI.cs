@@ -66,9 +66,9 @@ public class ItemDataGUI : MonoBehaviour {
 		GUI.matrix = transform.localToWorldMatrix;
 
 		switch (item.size) {
-		case Item.Size.small: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondosmall); break;
-		case Item.Size.medium: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondonormal); break;
-		case Item.Size.large: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondolarge); break;
+			case Item.Size.small: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondosmall); break;
+			case Item.Size.medium: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondonormal); break;
+			case Item.Size.large: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondolarge); break;
 		}
 
 		GUI.DrawTexture (new Rect (68 - (item.image.texture.width/2) , 68 - (item.image.texture.height/2), item.image.texture.width, item.image.texture.height), item.image.texture);

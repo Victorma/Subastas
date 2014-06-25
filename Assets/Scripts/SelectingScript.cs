@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 public class SelectingScript : MonoBehaviour {
 
-	private bool seleccionando;
-	List<PeopleScript> seleccionados;
+	public Texture defaultvalue;
 
-	IEnumerator SelectPeople(List<PeopleScript> people, Item currentItem){
-		seleccionados = new List<PeopleScript> ();
+	IEnumerator SelectPeople(Item currentItem){
+
+		List<PeopleScript> people =  new List<PeopleScript>(GameObject.FindObjectsOfType<PeopleScript>());
+
+		foreach (PeopleScript p in people) {
+			p.gameObject.SetActive (true);
+			if(p.GetComponent<AreaRandomMover>()!=null)
+				p.GetComponent<AreaRandomMover>().enabled = false;
+		}
+
+		List<PeopleScript> seleccionados = new List<PeopleScript> ();
 
 		while( people.Count != 0){
 			int person = Random.Range(0, people.Count);
@@ -23,50 +31,51 @@ public class SelectingScript : MonoBehaviour {
 
 			people.RemoveAt (person);
 		}
-		this.seleccionando = false;
-	}
 
-	void Start () {
-		List<PeopleScript> pujadores =  new List<PeopleScript>(GameObject.FindObjectsOfType<PeopleScript>());
-
-		foreach (PeopleScript p in pujadores) {
-			p.gameObject.SetActive (true);
-			if(p.GetComponent<AreaRandomMover>()!=null)
-				p.GetComponent<AreaRandomMover>().enabled = false;
-		}
-
-		this.seleccionando = true;
-		StartCoroutine(SelectPeople(pujadores, new Item()));
-	}
-
-	void Update () {
-		if (!seleccionando) {
-			bool terminado = true;
+		bool terminado = false;
+		while(!terminado){
+			terminado = true;
 			foreach(PeopleScript p in seleccionados){
 				if(p.gameObject.activeSelf){
 					terminado=false;
 					break;
 				}
 			}
-			if(terminado){
-				List<PeopleScript> total =  new List<PeopleScript>(GameObject.FindObjectsOfType<PeopleScript>());
-				
-				foreach(PeopleScript p in total){
-					DontDestroyOnLoad(p.gameObject);
-				}
-				
-				foreach(PeopleScript p in seleccionados){
-					DontDestroyOnLoad(p.gameObject);
-					p.gameObject.SetActive(true);
-					p.GetComponent<PujadorScript>().enabled = true;
-				}
-				StartCoroutine(changeState());
-			}
+			yield return new WaitForSeconds(0.1f);
 		}
-	}
-	IEnumerator changeState(){
+
+		List<PeopleScript> total =  new List<PeopleScript>(GameObject.FindObjectsOfType<PeopleScript>());
+		
+		foreach(PeopleScript p in total)
+			DontDestroyOnLoad(p.gameObject);
+		
+		foreach(PeopleScript p in seleccionados){
+			DontDestroyOnLoad(p.gameObject);
+			p.gameObject.SetActive(true);
+			p.GetComponent<PujadorScript>().enabled = true;
+		}
+
 		AutoFade.LoadLevel("AuctionScene", 0.2f,0.5f, Color.black);
 		yield return new WaitForSeconds(0.25f);
-		GameObject.FindObjectOfType<Auction>().State = Auction.AuctionState.Auctioning;
+
+		GameObject.FindObjectOfType<Auction>().state = Auction.AuctionState.Auctioning;
 	}
+
+	private ItemSelectionGUI selectionGUI;
+
+	void Start () {
+		HomeArea h = FindObjectOfType<HomeArea>();
+		selectionGUI = h.Menu.GetComponent<ItemSelectionGUI>();
+		selectionGUI.enabled = true;
+		selectionGUI.setController(this);
+	}
+
+	void Update () {
+
+	}
+
+	public void itemDropped(Item item){
+		StartCoroutine(SelectPeople(item));
+	}
+
 }

@@ -1,12 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HomeArea : MonoBehaviour {
-
-	public Transform AuctionDoor;
-	public Transform BuyingDoor;
-	public Transform FrontDoor;
-	public Transform Menu;
+public class PubliScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -16,5 +11,9 @@ public class HomeArea : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void SelectPubli(Object publi){
+
 	}
 }

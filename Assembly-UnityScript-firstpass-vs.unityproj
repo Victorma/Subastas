@@ -56,12 +56,27 @@
      <Compile Include="Assets\Standard Assets\Scripts\Camera Scripts\SmoothLookAt.js" />
      <Compile Include="Assets\Standard Assets\Scripts\General Scripts\DragRigidbody.js" />
      <None Include="Assets\Pixelplacement\ColliderButton\Example\Shaders\ReflectiveBumpSpecularRim.shader" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\BananaLargeAtlas_Scale4.txt" />
      <None Include="Assets\Futile\Resources\Shaders\AdditiveColor.shader" />
      <None Include="Assets\Futile\Resources\Shaders\Additive.shader" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\GameAtlas_Scale1.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\BananaLargeAtlas_Scale1.txt" />
      <None Include="Assets\Pixelplacement\ColliderButton\Example\Shaders\TextureRim.shader" />
+     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\BananaGameAtlas_Scale4.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\BananaLargeAtlas_Scale2.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\FranchiseFont_Scale2.txt" />
+     <None Include="Assets\Plugins\whydoidoit.com\license.txt" />
      <None Include="Assets\Pixelplacement\ColliderButton\Example\Shaders\ShadowProjection.shader" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\GameAtlas_Scale2.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\FranchiseFont_Scale1.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\GameAtlas_Scale4.txt" />
      <None Include="Assets\Futile\Resources\Shaders\SolidColored.shader" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\BananaGameAtlas_Scale2.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\FranchiseFont_Scale4.txt" />
+     <None Include="Assets\FutileDemos\Resources\Atlases\BananaGameAtlas_Scale1.txt" />
      <None Include="Assets\Futile\Resources\Shaders\Basic.shader" />
+     <None Include="Assets\UnitySerializer\readme.txt" />
      <None Include="Assets\Futile\Resources\Shaders\Solid.shader" />
  <Reference Include="GoKit">
  <HintPath>C:/Users/Victorma/Documents/GitHub/Subastas/Assets/Futile/ThirdParty/GoKit.dll</HintPath>

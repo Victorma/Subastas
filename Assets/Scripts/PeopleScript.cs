@@ -28,10 +28,11 @@ public class PeopleScript : MonoBehaviour {
 	private Transform followed;
 	private float distance;
 
+	private bool nextUpdateMoveTo;
+	private Vector3 nextUpdateMoveToPoint;
 	public void moveTo(Vector3 point){
-		isMoving = true;
-		GetComponent<NavMeshAgent>().SetDestination(point);
-		movingTo = point;
+		this.nextUpdateMoveTo = true;
+		this.nextUpdateMoveToPoint = point;
 	}
 
 	public void follow(Transform transform, float distance){
@@ -63,6 +64,13 @@ public class PeopleScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(this.enabled){
+			if(nextUpdateMoveTo){
+				isMoving = true;
+				GetComponent<NavMeshAgent>().SetDestination(nextUpdateMoveToPoint);
+				movingTo = nextUpdateMoveToPoint;
+				nextUpdateMoveTo = false;
+			}
+
 			if(isFollowing){
 				moveTo(followed.position + (this.transform.position - followed.position).normalized * distance);
 			}
