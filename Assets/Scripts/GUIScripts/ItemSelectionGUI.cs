@@ -26,7 +26,7 @@ public class ItemSelectionGUI : MonoBehaviour {
 			percentOpened-=openingSpeed*Time.deltaTime;
 			if(percentOpened <0)percentOpened = 0;
 		}
-
+		  
 		if(openItem == null && percentOpened == 0){
 			itemSelected = -1;
 			dropped = false;
