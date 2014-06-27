@@ -1,26 +1,30 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class PubliGUI : MonoBehaviour {
 
-	private SelectingScript controller;
-	public void setController(SelectingScript controller){
+	private PubliScript controller;
+	public void setController(PubliScript controller){
 		this.controller = controller;
 	}
 	
 	public Texture2D fondo;
 
+	public PubliTypes.PubliType[] types;
+	public Dictionary<PubliTypes.PubliType, float> values = new Dictionary<PubliTypes.PubliType, float>();
+
 	void Start () {
+
+		types = Resources.Load<PubliTypes>("PubliTypes").tipos;
+		foreach(PubliTypes.PubliType t in types)
+			values.Add(t, 1f/(float)types.Length);
 
 	}
 
-	Object other;
 	void Update () {
 		
 	}
 
-
-	
 	private bool dropped;
 	private Vector2 droppedPos;
 	private Item openItem;
@@ -31,7 +35,10 @@ public class PubliGUI : MonoBehaviour {
 	public float anchoHueco = 174f;
 	public float altoHueco = 123f;
 	public float separacionInicial = 25f;
-	public float moneyValue;
+
+	public float moneyValue = 300;
+	public float minMoney = 50;
+	public float maxMoney = 5000;
 	
 	void OnGUI () {
 		
@@ -53,24 +60,30 @@ public class PubliGUI : MonoBehaviour {
 		Rect guiArea = new Rect (0, 0, fondo.width, fondo.height);
 		GUI.DrawTexture (guiArea, fondo);
 
-		if(GUI.Button(new Rect(10, 10, guiArea.width - 20, guiArea.height/2f - 15), "Change distribution")){
-			other = this.gameObject.AddComponent<PubliDistributionGUI>();
-			//other.publiArgs = controlle;
+		if(GUI.Button(new Rect(10, 10, guiArea.width - 20, 2*guiArea.height/5f - 15), "Change distribution")){
+			PubliDistributionGUI distr = this.gameObject.AddComponent<PubliDistributionGUI>();
+			distr.types = this.types;
+			distr.values = this.values;
 		}
 
 		float buttonSize = 95;
 
-
-
-		GUILayout.BeginArea(new Rect(10, guiArea.height/2f + 5, guiArea.width - buttonSize - 5, guiArea.height/2f - 10));
+		GUILayout.BeginArea(new Rect(10, 2*guiArea.height/5f + 5, guiArea.width - buttonSize - 35, 3f*guiArea.height/5f - 10));
 		GUILayout.BeginVertical();
-		moneyValue = GUILayout.HorizontalSlider( moneyValue, 50, 50000);
+
+
+		//moneyValue = GUILayout.HorizontalSlider( moneyValue, 50, 50000);
+		GUILayout.Space(40);
+		Rect r = new Rect(0,0,350, 38);
+		moneyValue = CustomSliderClass.Draw(r, Mathf.RoundToInt(moneyValue), minMoney, maxMoney, Color.yellow);
 		GUILayout.Label(moneyValue+"", Resources.Load<GUISkin> ("pix").GetStyle ("ItemGUIMoney"));
 		GUILayout.EndVertical();
 		GUILayout.EndArea();
 
 
-		GUI.Button (new Rect (guiArea.width - buttonSize - 10, guiArea.height/2f + 5, buttonSize, buttonSize), "", Resources.Load<GUISkin> ("pix").GetStyle ("YesButton"));
+		if(GUI.Button (new Rect (guiArea.width - buttonSize - 10, guiArea.height/2f + 5, buttonSize, buttonSize), "", Resources.Load<GUISkin> ("pix").GetStyle ("YesButton"))){
+			controller.SelectPubli(values, moneyValue);
+		}
 
 		
 		GUI.matrix = bc;

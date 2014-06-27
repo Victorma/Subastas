@@ -12,22 +12,18 @@ public class PubliDistributionGUI : MonoBehaviour {
 		set{ scale = value; }
 	}
 
-	PubliTypes.PubliType[] types;
-	Dictionary<PubliTypes.PubliType, float> values = new Dictionary<PubliTypes.PubliType, float>();
-	// Use this for initialization
+	public PubliTypes.PubliType[] types;
+	public Dictionary<PubliTypes.PubliType, float> values = new Dictionary<PubliTypes.PubliType, float>();
+	
 	void Start () {
-
-		types = Resources.Load<PubliTypes>("PubliTypes").tipos;
-		foreach(PubliTypes.PubliType t in types)
-			values.Add(t, 1f/(float)types.Length);
-
 		Go.to(this, 0.5f, new TweenConfig().vector2Prop("Scale", new Vector2(1,1)).setEaseType(EaseType.BackOut));
 		scale = new Vector2(0.0001f, 0.0001f);
 	}
-	
-	// Update is called once per frame
+
+	private bool closing = false;
 	void Update () {
-		
+		if(closing && scale.x < 0.001f)
+			GameObject.Destroy(this);
 	}
 
 	void OnGUI(){
@@ -70,7 +66,9 @@ public class PubliDistributionGUI : MonoBehaviour {
 						customStyle.normal.background = tipo.imagen;
 						GUILayout.Box("",  customStyle, GUILayout.ExpandWidth(false), GUILayout.Width(75), GUILayout.Height(75));
 						float lastVal = values[types[i]];
-						values[types[i]] = GUILayout.HorizontalSlider(values[types[i]],0f,1f, GUILayout.MaxWidth(280));
+						Rect rect = new Rect(85,50,280,38);
+						values[types[i]] = CustomSliderClass.Draw(rect, values[types[i]], 0f, 1f, types[i].color);
+						//values[types[i]] = GUILayout.HorizontalSlider(values[types[i]],0f,1f, GUILayout.MaxWidth(280));
 						if(lastVal != values[types[i]]){
 							float dif = (values[types[i]] - lastVal);
 							int vars = 0;
@@ -88,20 +86,29 @@ public class PubliDistributionGUI : MonoBehaviour {
 					GUILayout.EndHorizontal();
 				GUILayout.EndVertical();
 			GUILayout.EndArea();
+
 		}
 		GUILayout.EndArea();
+		GUILayoutUtility.GetRect(size.x, size.y - 120);
 
+		if(GUILayout.Button("Cerrar", GUILayout.ExpandHeight(true))){
+			Go.to(this, 0.3f, new TweenConfig().vector2Prop("Scale", new Vector2(0.00001f,0.00001f)).setEaseType(EaseType.BackIn));
+			closing = true;
+		}
 
 		GUILayout.EndVertical();
 		GUILayout.EndArea();
 
-		float value = 0;
+		/*float value = 0;
 		for(int j = 0; j< types.Length; j++)
 			value+=values[types[j]];
-		Debug.Log(value);
+		Debug.Log(value);*/
 
 		GUI.skin = bcs;
 		GUI.matrix = bc;
+
+		if(Event.current.isMouse)
+			Event.current.Use();
 
 	}
 }

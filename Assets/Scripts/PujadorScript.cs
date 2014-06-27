@@ -90,4 +90,11 @@ public class PujadorScript : MonoBehaviour {
 		if(frenzy >= 1f)
 			frenzy = 1f;
 	}
+
+	public void PassBid(BidScript bid){
+		this.enabled = false;
+		this.gameObject.GetComponent<PeopleScript>().moveTo(GameObject.FindObjectOfType<AuctionArea>().doorPosition.position);
+		this.gameObject.AddComponent<AutoRemoverScript>();
+
+	}
 }

@@ -116,7 +116,9 @@ public class PeopleScript : MonoBehaviour {
 
 				for(int i = 0; i< myLayer.Count; i++)
 					myLayer[i].sortingOrder = i;
-				if((movingTo - transform.position).magnitude <= 0.002f){
+
+				Debug.Log ("I'm moving to: "+movingTo+" And i'm at: " +this.transform.position);
+				if((movingTo - transform.position).magnitude <= 0.02f){
 					isMoving = false;
 					GetComponent<NavMeshAgent>().Stop();
 				}

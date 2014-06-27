@@ -10,6 +10,8 @@ public class ItemSelectionGUI : MonoBehaviour {
 	}
 
 	public Texture2D fondo, small, medium, large, glass;
+
+
 	
 	// Use this for initialization
 	void Start () {

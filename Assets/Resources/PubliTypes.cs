@@ -7,6 +7,7 @@ public class PubliTypes : ScriptableObject {
 	public class PubliType {
 		public string name;
 		public Texture2D imagen;
+		public Color color;
 		
 		public float Hombre, Mujer, Joven, Adulto, Anciano, Prole, Media, Burgues;
 	}
