@@ -17,6 +17,7 @@ public class ItemSelectionGUI : MonoBehaviour {
 	void Start () {
 		//ImgWidth = 480f;
 		//ImgHeight = 255f;
+		itemSelected = -1;
 	}
 	
 	// Update is called once per frame
@@ -89,7 +90,7 @@ public class ItemSelectionGUI : MonoBehaviour {
 						openItem = null; 
 						 // TODO hacer que se mueva para atras y despues se cierre
 					}else{
-						controller.itemDropped(items[i]);
+						controller.itemDropped(itemSelected);
 					}
 				}
 

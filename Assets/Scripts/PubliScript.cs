@@ -17,7 +17,7 @@ public class PubliScript : MonoBehaviour {
 	
 	}
 
-	private static int chooseRandom(params float[] posibilities){
+	public static int chooseRandom(params float[] posibilities){
 
 		float total = 0;
 		foreach(float f in posibilities)
@@ -100,8 +100,6 @@ public class PubliScript : MonoBehaviour {
 			GameObject person = pt.createFrom(age, genre, socialClass);
 			person.transform.position = ha.FrontDoor.transform.position;
 
-
-			
 			Vector3 nuevoPunto = new Vector3(area.x + area.width*Random.Range(0f,1f), person.transform.position.y, area.y + area.height*Random.Range(0f,1f));
 
 			//Vector3 point = ha.transform.TransformPoint(hap.start) + (ha.transform.TransformPoint(hap.end)-ha.transform.TransformPoint(hap.start))*Random.Range(0f,1f);

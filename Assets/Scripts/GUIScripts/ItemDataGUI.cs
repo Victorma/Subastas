@@ -130,7 +130,7 @@ public class ItemDataGUI : MonoBehaviour {
 		}
 	}
 
-	private string getFileName(PeopleScript ps){
+	public static string getFileName(PeopleScript ps){
 		string filename = "";
 
 		switch (ps.genre) {

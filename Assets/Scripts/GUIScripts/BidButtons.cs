@@ -3,6 +3,8 @@ using System.Collections;
 
 public class BidButtons : MonoBehaviour {
 
+	private Vector2 targetScreenSize = new Vector2(480, 850);
+
 	string valString;
 
 	Rect group;
@@ -29,24 +31,19 @@ public class BidButtons : MonoBehaviour {
 
 		auctioning = Auction.currentAuction.GetComponent<AuctioningScript>();
 
-		groupWidth = 170;
-		groupHeight = 60;
-		screenWidth = Screen.width;
-		screenHeight = Screen.height;
-		groupX = -(groupWidth/2f); //( screenWidth - groupWidth ) / 2f;
-		groupY = -(groupHeight/2f); //3.25f*( screenHeight - groupHeight ) / 4f;
+		groupWidth = 300;
+		groupHeight = 140;
+
+		groupX = -(groupWidth/2f); 
+		groupY = -(groupHeight/2f); 
 
 		group = new Rect (groupX, groupY, groupWidth, groupHeight);
-		/*box = new Rect (0, 0, groupWidth, groupHeight);
-		buttonPlus = new Rect (130, 25, 40, 30);
-		text = new Rect (60, 25, 60, 30);
-		buttonMinus = new Rect (5, 25, 40, 30);*/
+
 		valString ="0 $";
 	}
 	
 	public void Show(){
 		Go.to(this, 0.5f, new TweenConfig()
-		      .setDelay(2f)
 		      .vector3Prop("LocalScale", new Vector3(1f,1f,1f))
 		      .setEaseType(EaseType.BackOut));
 	}
@@ -63,56 +60,49 @@ public class BidButtons : MonoBehaviour {
 		if(auctioning == null)
 			auctioning = Auction.currentAuction.GetComponent<AuctioningScript>();
 
+		if(auctioning == null)
+			return;
+
 		Matrix4x4 bc = GUI.matrix;
-		Vector3 pos, scale, rot;
-		pos = transform.position;
-		scale = transform.localScale;
+
+		float rx = (Screen.width / (float)targetScreenSize.x)*transform.localScale.x;
+		float ry = (Screen.height/ (float)targetScreenSize.y)*transform.localScale.y;
+		GUI.depth = 2;
 		
-		Vector2 point  = Camera.main.WorldToScreenPoint(pos);
+		Vector2 point  = Camera.main.WorldToScreenPoint(transform.position);
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
-		transform.position = guipoint;
 		
-		GUI.matrix = transform.localToWorldMatrix;
-
+		GUI.matrix = Matrix4x4.TRS (new Vector3(guipoint.x, guipoint.y, 0), Quaternion.identity, new Vector3 (rx, ry, 1));
+		GUI.skin = Resources.Load<GUISkin>("pix");
 
 		GUILayout.BeginArea(group, GUI.skin.box);
 
-		GUIStyle myStyle = new GUIStyle(GUI.skin.label);
-		myStyle.alignment = TextAnchor.MiddleCenter; 
+			GUIStyle myStyle = new GUIStyle(GUI.skin.label);
+			myStyle.alignment = TextAnchor.MiddleCenter; 
+			valString = auctioning.bid + " $";
 
-		GUILayout.Label ("Bid", myStyle);
-		GUILayout.BeginHorizontal();
-		if (GUILayout.Button ("-")) {
-			auctioning.bid -= 25;
-			if (auctioning.bid >= 0) {
-				valString = auctioning.bid.ToString() + " $";
+			GUILayout.Label ("Bid", myStyle);
+			GUILayout.BeginHorizontal();
+			if (GUILayout.Button ("-", GUILayout.ExpandHeight(true))) {
+				auctioning.bid -= 25;
+				if (auctioning.bid < 0) 
+					auctioning.bid = 0;
 			}
-			else {
-				auctioning.bid = 0;
-				valString = auctioning.bid.ToString() + " $";
-			}
-			
-		}
-		myStyle = new GUIStyle(GUI.skin.textField);
-		myStyle.alignment = TextAnchor.MiddleCenter; 
-		// Prrrrfect
-		GUILayout.TextField (valString, myStyle, GUILayout.Width(2*group.width / 5f));
+			myStyle = new GUIStyle(GUI.skin.textField);
+			myStyle.alignment = TextAnchor.MiddleCenter; 
 
-		if (GUILayout.Button ("+")) {
-			auctioning.bid += 25;
-			valString = auctioning.bid.ToString() + " $";
-		}
+			GUILayout.TextField (valString, myStyle, GUILayout.Width(2*group.width / 5f), GUILayout.ExpandHeight(true));
+
+			if (GUILayout.Button ("+", GUILayout.ExpandHeight(true)) )
+				auctioning.bid += 25;
+
 		GUILayout.EndHorizontal();
-
 
 		GUILayout.EndArea();
 
-		
 		GUI.matrix = bc;
-		
-		transform.position = pos;
-		transform.localScale = scale;
+
 	}
 
 

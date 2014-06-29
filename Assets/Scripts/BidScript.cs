@@ -30,9 +30,7 @@ public class BidScript : MonoBehaviour {
 					animator.SetBool("Closed",true);
 					used = true;
 					AuctioningScript auc = Auction.currentAuction.GetComponent<AuctioningScript>();
-					
-					auc.ganadorActual = bidParent;
-					auc.price += bidCuantity;
+					auc.TakeBid(this);
 					
 					foreach(PujadorScript p in GameObject.FindObjectsOfType<PujadorScript>())
 						p.TakeBid(this);

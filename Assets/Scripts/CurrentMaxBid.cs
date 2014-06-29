@@ -3,15 +3,7 @@ using System.Collections;
 
 public class CurrentMaxBid : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	private Vector2 targetScreenSize = new Vector2(480, 850);
 
 	public Vector3 LocalScale{
 		get{ return transform.localScale; }
@@ -20,7 +12,6 @@ public class CurrentMaxBid : MonoBehaviour {
 
 	public void Show(){
 		Go.to(this, 0.5f, new TweenConfig()
-		      .setDelay(2f)
 		      .vector3Prop("LocalScale", new Vector3(1f,1f,1f))
 		      .setEaseType(EaseType.BackOut));
 	}
@@ -37,48 +28,33 @@ public class CurrentMaxBid : MonoBehaviour {
 			return;
 
 		Matrix4x4 bc = GUI.matrix;
-		Vector3 pos, scale, rot;
-		pos = transform.position;
-		scale = transform.localScale;
 
-		GUI.skin = Resources.Load<GUISkin> ("pix");
-		GUIContent texto = new GUIContent ("Price: " + auct.price + " $");
+		float rx = (Screen.width / (float)targetScreenSize.x)*transform.localScale.x;
+		float ry = (Screen.height/ (float)targetScreenSize.y)*transform.localScale.y;
 
-		Vector2 tam = GUI.skin.label.CalcSize (texto);
-
-		Rect group = new Rect(-tam.x/2f,-tam.y/2f,tam.x + 10f,tam.y + 10f);
-		Vector2 point  = Camera.main.WorldToScreenPoint(pos);
+		Vector2 point  = Camera.main.WorldToScreenPoint(transform.position);
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
-		transform.position = guipoint;
+
+		GUI.matrix = Matrix4x4.TRS (new Vector3(guipoint.x, guipoint.y, 0), Quaternion.identity, new Vector3 (rx, ry, 1));
+		GUI.depth = 2;
 		
-		GUI.matrix = transform.localToWorldMatrix;
+		GUI.skin = Resources.Load<GUISkin> ("pix");
+		GUIContent texto = new GUIContent (auct.price+"");
 
-		/*Texture2D texture = new Texture2D(1, 1);
-		texture.SetPixel(0,0,new Color (0, 0, 0, 1));
-		texture.Apply();*/
-		//GUI.skin.box.normal.background = texture;
+		GUIStyle s = GUI.skin.GetStyle("ItemGUIMoney");
+		Vector2 tam =  s.CalcSize (texto);
+		if(tam.x < 100)
+			tam.x = 100;
 
-		GUILayout.BeginArea(group, GUI.skin.box);
+		Rect group = new Rect((-tam.x/2f)-10f,(-tam.y/2f)-10f,tam.x+20f,tam.y+20f);
+		GUILayout.BeginArea(group);
 
-			Color col_blanco = new Color (255,215,0);
-			drawText (col_blanco, texto.text);
+		GUILayout.Label (texto,s, GUILayout.ExpandWidth(true)) ;
 		
 		GUILayout.EndArea();
-		
-		
-		GUI.matrix = bc;
-		
-		transform.position = pos;
-		transform.localScale = scale;
-	}
-	
-	void drawText(Color color, string text) {
-		GUI.contentColor = color;
 
-		var centeredStyle = GUI.skin.GetStyle("Label");
-		centeredStyle.alignment = TextAnchor.UpperLeft;
-		centeredStyle.fontSize = 13;
-		GUILayout.Label (text, centeredStyle);
+		GUI.matrix = bc;
 	}
+
 }

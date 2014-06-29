@@ -6,7 +6,20 @@ public class SelectingScript : MonoBehaviour {
 
 	public Texture defaultvalue;
 
-	IEnumerator SelectPeople(Item currentItem){
+	private class CercaniaTransform : IComparer<PeopleScript> {
+		private Transform to;
+		public CercaniaTransform(Transform to){
+			this.to = to;
+		}
+		public int Compare(PeopleScript p1, PeopleScript p2){
+			return Mathf.RoundToInt((p1.transform.position - to.position).magnitude - (p2.transform.position - to.position).magnitude);
+		}
+
+	}
+
+	IEnumerator SelectPeople(int i){
+
+		Item item = Auction.currentAuction.items[i];
 
 		List<PeopleScript> people =  new List<PeopleScript>(GameObject.FindObjectsOfType<PeopleScript>());
 
@@ -17,16 +30,18 @@ public class SelectingScript : MonoBehaviour {
 		}
 
 		List<PeopleScript> seleccionados = new List<PeopleScript> ();
+		Transform door = GameObject.FindObjectOfType<HomeArea>().AuctionDoor;
+		seleccionados.Sort(new CercaniaTransform(door));
 
 		while( people.Count != 0){
 			int person = Random.Range(0, people.Count);
 			int gusto = Random.Range(0, 10);
 
 			if(gusto>=5){
-				people[person].moveTo(GameObject.FindObjectOfType<HomeArea>().AuctionDoor.position);
+				people[person].moveTo(door.position);
 				people[person].gameObject.AddComponent("AutoRemoverScript");
 				seleccionados.Add(people[person]);
-				yield return new WaitForSeconds(1f);
+				yield return new WaitForSeconds(0.66f);
 			}
 
 			people.RemoveAt (person);
@@ -52,7 +67,7 @@ public class SelectingScript : MonoBehaviour {
 		foreach(PeopleScript p in seleccionados){
 			DontDestroyOnLoad(p.gameObject);
 			p.gameObject.SetActive(true);
-			p.GetComponent<PujadorScript>().enabled = true;
+			p.GetComponent<PujadorScript>().selected = true;
 		}
 
 		AutoFade.LoadLevel("AuctionScene", 0.2f,0.5f, Color.black);
@@ -64,18 +79,27 @@ public class SelectingScript : MonoBehaviour {
 	private ItemSelectionGUI selectionGUI;
 
 	void Start () {
-		HomeArea h = FindObjectOfType<HomeArea>();
-		selectionGUI = h.Menu.GetComponent<ItemSelectionGUI>();
-		selectionGUI.enabled = true;
-		selectionGUI.setController(this);
+		bool hasItems = false;
+		foreach(Item i in Auction.currentAuction.items)
+			if( i != null) hasItems = true;
+
+		if(!hasItems)
+			Auction.currentAuction.state = Auction.AuctionState.Nothing;
+		else{
+			HomeArea h = FindObjectOfType<HomeArea>();
+			selectionGUI = h.Menu.GetComponent<ItemSelectionGUI>();
+			selectionGUI.enabled = true;
+			selectionGUI.setController(this);
+		}
 	}
 
 	void Update () {
 
 	}
 
-	public void itemDropped(Item item){
-		StartCoroutine(SelectPeople(item));
+	public void itemDropped(int i){
+		Auction.currentAuction.currentSlot = i;
+		StartCoroutine(SelectPeople(i));
 	}
 
 }

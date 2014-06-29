@@ -3,15 +3,9 @@ using System.Collections;
 
 public class FrenzyRect : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-
-	}
+	private Vector2 targetScreenSize = new Vector2(480, 850);
+	private Rect group = new Rect(-150,-30,300,60);
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public Vector3 LocalScale{
 		get{ return transform.localScale; }
@@ -20,7 +14,6 @@ public class FrenzyRect : MonoBehaviour {
 
 	public void Show(){
 		Go.to(this, 0.5f, new TweenConfig()
-		      .setDelay(2f)
 		      .vector3Prop("LocalScale", new Vector3(1f,1f,1f))
 		      .setEaseType(EaseType.BackOut));
 	}
@@ -39,46 +32,38 @@ public class FrenzyRect : MonoBehaviour {
 			return;
 
 		Matrix4x4 bc = GUI.matrix;
-		Vector3 pos, scale, rot;
-		pos = transform.position;
-		scale = transform.localScale;
 
-		Rect group = new Rect(0,0,170,30);
-		Vector2 point  = Camera.main.WorldToScreenPoint(pos);
+		float rx = (Screen.width / (float)targetScreenSize.x)*transform.localScale.x;
+		float ry = (Screen.height/ (float)targetScreenSize.y)*transform.localScale.y;
+
+		GUI.skin = Resources.Load<GUISkin>("pix");
+
+		Vector2 point  = Camera.main.WorldToScreenPoint(transform.position);
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
-		transform.position = guipoint;
 		
-		GUI.matrix = transform.localToWorldMatrix;
-
-
+		GUI.matrix = Matrix4x4.TRS (new Vector3(guipoint.x, guipoint.y, 0), Quaternion.identity, new Vector3 (rx, ry, 1));
+		GUI.depth = 2;
 		float frenzy = auct.Frenzy;
 
 		GUILayout.BeginArea(group, GUI.skin.box);
-		Rect cb = new Rect (0, 0, 170, 30);
-			Color col_blanco = new Color (250, 250, 250);
-		Rect cn = new Rect (5, 5, 160, 20);
-			Color col_negro = new Color (0, 0, 0);
-		Rect cr = new Rect (5, 5, 160 * frenzy, 20);
-			Vector3 col_rojo = new Vector3 (255f, 0, 0);
-			Vector3 col_azul = new Vector3 (0, 0, 255f);
+			Rect cb = new Rect (0, 0, group.width, group.height);
+
+			Rect cn = new Rect (10, 10, group.width-20, group.height-20);
+			Rect cr = new Rect (10, 10, (group.width-20) * frenzy, group.height-20);
+
+			GUILayout.BeginArea(cb, GUI.skin.box);
+			GUILayout.EndArea();
 
 			Color com = Color.red * frenzy + Color.blue * (1f - frenzy);
-
-			drawQuad (cb, col_blanco);
-			drawQuad (cn, col_negro);
+			drawQuad (cn, Color.black);
 			drawQuad (cr, com );
 
-		Rect ct= new Rect (5, 5, 160, 20);
-			drawText (ct, "MoneyText", "FRENZY");
+			drawText (cb, "Frenzy");
 		
 		GUILayout.EndArea();
-		
-		
+
 		GUI.matrix = bc;
-		
-		transform.position = pos;
-		transform.localScale = scale;
 	}
 
 	void drawQuad(Rect position, Color color) {
@@ -89,15 +74,15 @@ public class FrenzyRect : MonoBehaviour {
 
 		GUIStyle style = new GUIStyle(GUI.skin.box);
 		style.normal.background = texture;
-
-		GUI.Box(position, "", style);
+		GUILayout.BeginArea(position, style);
+		GUILayout.EndArea();
+		//GUI.Box(position, "", style);
 	}
 
-	void drawText(Rect position, string style, string text) {
+	void drawText(Rect position, string text) {
 
 		GUIStyle centeredStyle = new GUIStyle(GUI.skin.label);
-		centeredStyle.alignment = TextAnchor.UpperCenter;
-		centeredStyle.fontSize = 13;
+		centeredStyle.alignment = TextAnchor.MiddleCenter;
 		GUI.Label (position, text, centeredStyle);
 
 	}

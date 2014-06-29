@@ -13,16 +13,17 @@ public class WalkingGuysCreator : MonoBehaviour {
 	void Start () {
 		areaProvider = GetComponent<AreaProvider>();
 
+		Vector3 corner1 = areaProvider.transform.TransformPoint(areaProvider.start);
+		Vector3 corner2 = areaProvider.transform.TransformPoint(areaProvider.end);
+		Rect area = new Rect(corner1.x, corner1.z, corner2.x - corner1.x, corner2.z - corner1.z);
+
 		if(areaProvider!=null){
 			int people = Random.Range(minStartPeople, maxStartPeople);	
 			for(int i = 0; i< people; i++){
 				int person = Random.Range(0, prefabs.Count);
 				GameObject newGo = GameObject.Instantiate(prefabs[person])as GameObject;
 
-				float x = 0;//Random.Range(areaProvider.area.x, areaProvider.area.x + areaProvider.area.width);
-				float y = 0;//Random.Range(areaProvider.area.y, areaProvider.area.y + areaProvider.area.height);
-
-				newGo.transform.position = new Vector3(x,y,areaProvider.transform.position.z);
+				newGo.transform.position = new Vector3(area.x + area.width*Random.Range(0f,1f), 1, area.y + area.height*Random.Range(0f,1f));
 			}
 		}
 	}

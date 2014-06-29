@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -11,7 +12,33 @@ public class ItemScorer : ScriptableObject {
 		
 	}
 
-	public float getItemScore(PeopleScript p, ItemScript i) {
+	private class LikeSort: IComparer<PeopleScript>{
+		private ItemScorer i;
+		private Item item;
+		public LikeSort(ItemScorer i, Item item){
+			this.i = i;
+			this.item = item;
+		}
+		public int Comparer(PeopleScript p1, PeopleScript p2){
+			return Mathf.RoundToInt((i.getItemScore(p2,item) - i.getItemScore(p1, item))*10f);
+		}
+	}
+
+	public GameObject[] getOrderedPeople(Item i){
+		List<PeopleScript> liked = new List<PeopleScript>();
+
+		PeopleTypes pt = Resources.Load<PeopleTypes>("PeopleTypes");
+		foreach(GameObject go in pt.peopleTypes){
+			PeopleScript ps = go.GetComponent<PeopleScript>();
+			if(ps!=null)
+				liked.Add(ps);
+		}
+
+		liked.Sort(new LikeSort(this, i));
+		return liked.ToArray() as GameObject[];
+	}
+
+	public float getItemScore(PeopleScript p, Item i) {
 
 		float score = 0;
 		foreach(ItemType item in this.table )

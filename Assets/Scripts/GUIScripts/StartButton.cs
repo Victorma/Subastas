@@ -58,13 +58,10 @@ public class StartButton : MonoBehaviour {
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
 
-
 		float rx = Screen.width / native_width;
 		float ry = Screen.height / native_height;
 
-		transform.position = guipoint;
-
-		GUI.matrix = transform.localToWorldMatrix *Matrix4x4.TRS (new Vector3(0, 0, 0), Quaternion.identity, new Vector3 (rx, ry, 1));
+		GUI.matrix = Matrix4x4.TRS (new Vector3(Screen.width/2f, 2*Screen.height/3f, 0), Quaternion.identity, new Vector3 (rx*scale.x, ry*scale.y, 1));
 		/*
 		Rect area = GetComponent<AreaProvider>().area;
 		Vector3 wcorner = transform.TransformPoint(new Vector3(area.x,area.y,0));
@@ -75,7 +72,7 @@ public class StartButton : MonoBehaviour {
 		GUIUtility.ScreenToGUIRect(new Rect(corner.x, -corner.y, otherCorner.x - corner.x, - (otherCorner.y - corner.y))
 */
 
-		if(GUI.Button(new Rect(-150, -75, 300, 150),"Start!")){
+		if(GUI.Button(new Rect(-100, -60, 200, 120),"Start!")){
 				reanima = true;
 			}
 
