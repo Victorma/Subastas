@@ -17,6 +17,8 @@ public class SelectingScript : MonoBehaviour {
 
 	}
 
+	public string auctionScene = "AuctionScene";
+
 	IEnumerator SelectPeople(int i){
 
 		Item item = Auction.currentAuction.items[i];
@@ -70,7 +72,7 @@ public class SelectingScript : MonoBehaviour {
 			p.GetComponent<PujadorScript>().selected = true;
 		}
 
-		AutoFade.LoadLevel("AuctionScene", 0.2f,0.5f, Color.black);
+		AutoFade.LoadLevel(auctionScene, 0.2f,0.5f, Color.black);
 		yield return new WaitForSeconds(0.25f);
 
 		GameObject.FindObjectOfType<Auction>().state = Auction.AuctionState.Auctioning;
@@ -83,9 +85,12 @@ public class SelectingScript : MonoBehaviour {
 		foreach(Item i in Auction.currentAuction.items)
 			if( i != null) hasItems = true;
 
-		if(!hasItems)
+		if(!hasItems){
+			PeopleScript[] restantes = GameObject.FindObjectsOfType<PeopleScript>();
+			foreach(PeopleScript ps in restantes)
+				GameObject.DestroyImmediate(ps.gameObject);
 			Auction.currentAuction.state = Auction.AuctionState.Nothing;
-		else{
+		}else{
 			HomeArea h = FindObjectOfType<HomeArea>();
 			selectionGUI = h.Menu.GetComponent<ItemSelectionGUI>();
 			selectionGUI.enabled = true;

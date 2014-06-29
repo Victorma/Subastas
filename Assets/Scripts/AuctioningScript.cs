@@ -128,17 +128,16 @@ public class AuctioningScript : MonoBehaviour {
 	}
 
 	public void End(){
-		Debug.Log ("Starting end");
 		StartCoroutine(EndC());
 	}
 
 	IEnumerator EndC(){
-		Debug.Log("ending!");
 		List<PeopleScript> toRem = new List<PeopleScript>();
 
 		for(int i = pujadores.Count-1; i>=0; i--){
 			if(pujadores[i] == null || pujadores[i].GetComponent<PujadorScript>().silla != null){
-				GameObject.DestroyImmediate(pujadores[i].gameObject);
+				if(pujadores[i] != null)
+					GameObject.DestroyImmediate(pujadores[i].gameObject);
 				pujadores.RemoveAt(i);
 			}
 		}
@@ -154,7 +153,6 @@ public class AuctioningScript : MonoBehaviour {
 		Rect area = new Rect(corner1.x, corner1.z, corner2.x - corner1.x, corner2.z - corner1.z);
 
 		foreach(PeopleScript p in pujadores){
-			Debug.Log("persona end!");
 			//person.transform.position = ha.FrontDoor.transform.position;
 			
 			Vector3 nuevoPunto = new Vector3(area.x + area.width*Random.Range(0f,1f), p.transform.position.y, area.y + area.height*Random.Range(0f,1f));

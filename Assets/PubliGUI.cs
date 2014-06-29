@@ -43,14 +43,10 @@ public class PubliGUI : MonoBehaviour {
 	void OnGUI () {
 		
 		Matrix4x4 bc = GUI.matrix;
-		Vector3 pos, scale, rot;
-		pos = transform.position;
-		scale = transform.localScale;
-		
-		Vector2 point  = Camera.main.WorldToScreenPoint(pos);
+
+		Vector2 point  = Camera.main.WorldToScreenPoint(transform.position);
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
-		transform.position = guipoint;
 		
 		float rx = Screen.width / (float)fondo.width;
 		float ry = (Screen.height-guipoint.y) / (float)fondo.height;
@@ -85,10 +81,6 @@ public class PubliGUI : MonoBehaviour {
 			controller.SelectPubli(values, moneyValue);
 		}
 
-		
 		GUI.matrix = bc;
-		
-		transform.position = pos;
-		transform.localScale = scale;
 	}
 }

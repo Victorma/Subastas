@@ -7,5 +7,7 @@ public class BuyingArea : MonoBehaviour {
 	public Transform EnterDoor;
 	public Transform ExitDoor;
 	public Transform TradePoint;
+	public Transform PolicePosition;
+	public Transform PoliceEnter;
 	
 }

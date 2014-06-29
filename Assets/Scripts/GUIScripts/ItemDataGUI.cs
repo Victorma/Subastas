@@ -3,13 +3,17 @@ using System.Collections.Generic;
 
 public class ItemDataGUI : MonoBehaviour {
 
-	int ImgWidth, ImgHeight, screenWidth, screenHeight;
+	private Vector2 targetScreenSize = new Vector2(480, 850);
+	private Vector2 size = new Vector2(480, 144);
+	private Vector2 scale;
 
-	private bool shown = false;
+	public bool shown = false;
 
 	public Item item;
 
 	public Font font;
+
+	public Texture2D fondo;
 
 	public Texture2D fondosmall;
 	public Texture2D fondonormal;
@@ -35,11 +39,7 @@ public class ItemDataGUI : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-
-		ImgWidth = 480;
-		ImgHeight = 255;
-		screenWidth = Screen.width;
-		screenHeight = Screen.height;
+		scale = new Vector2(0.0001f, 0.0001f);
 	}
 	
 	// Update is called once per frame
@@ -52,23 +52,29 @@ public class ItemDataGUI : MonoBehaviour {
 	}
 
 	void OnGUI () {
-
+		
 		Matrix4x4 bc = GUI.matrix;
 		Vector3 pos, scale, rot;
 		pos = transform.position;
 		scale = transform.localScale;
-
+		
 		Vector2 point  = Camera.main.WorldToScreenPoint(pos);
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
 		transform.position = guipoint;
 		
-		GUI.matrix = transform.localToWorldMatrix;
+		float rx = (Screen.width / (float)targetScreenSize.x)*scale.x;
+		float ry = (Screen.height/ (float)targetScreenSize.y)*scale.y;
+		
+		GUI.depth = 2;
+		GUI.matrix = Matrix4x4.TRS (guipoint, Quaternion.identity, new Vector3 (rx, ry, 1));
+
+		GUI.DrawTexture (new Rect (0, 0, size.x, size.y), fondo);
 
 		switch (item.size) {
-			case Item.Size.small: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondosmall); break;
-			case Item.Size.medium: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondonormal); break;
-			case Item.Size.large: GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondolarge); break;
+		case Item.Size.small: GUI.DrawTexture (new Rect (12, 12, 112, 112), fondosmall); break;
+		case Item.Size.medium: GUI.DrawTexture (new Rect (12, 12, 112, 112), fondonormal); break;
+		case Item.Size.large: GUI.DrawTexture (new Rect (12, 12, 112, 112), fondolarge); break;
 		}
 
 		GUI.DrawTexture (new Rect (68 - (item.image.texture.width/2) , 68 - (item.image.texture.height/2), item.image.texture.width, item.image.texture.height), item.image.texture);
@@ -79,34 +85,8 @@ public class ItemDataGUI : MonoBehaviour {
 
 		GUI.TextArea (new Rect (153, 53, 314, 69), item.description, Resources.Load<GUISkin> ("pix").GetStyle("ItemGUIDescription"));
 
-		GUI.TextArea (new Rect (32, 155, 176, 74), item.sellingPrice.ToString(), Resources.Load<GUISkin> ("pix").GetStyle("ItemGUIMoney"));
-
-		switch (item.rareness) {
-			case Item.RareType.Common:
-				GUI.DrawTexture (new Rect (360, 132, 112, 112), common);
-				break;
-			case Item.RareType.Uncommon:
-				GUI.DrawTexture (new Rect (360, 132, 112, 112), uncommon);
-				break;
-			case Item.RareType.Rare:
-				GUI.DrawTexture (new Rect (360, 132, 112, 112), rare);
-				break;
-			case Item.RareType.Epic:
-				GUI.DrawTexture (new Rect (360, 132, 112, 112), epic);
-				break;
-			case Item.RareType.Legendary:
-				GUI.DrawTexture (new Rect (360, 132, 112, 112), legendary);
-			break;	
-		}
-
-		GUI.DrawTexture (new Rect (236, 146, 64, 64), Resources.Load<Texture2D> ("buyarea/frontales/"+getFileName(gente[0])));
-		GUI.DrawTexture (new Rect (292, 146, 64, 64), Resources.Load<Texture2D> ("buyarea/frontales/"+getFileName(gente[1])));
-		GUI.DrawTexture (new Rect (263, 176, 64, 64), Resources.Load<Texture2D> ("buyarea/frontales/"+getFileName(gente[2])));
-		
-		GUI.matrix = bc;
-
 		transform.position = pos;
-		transform.localScale = scale;
+		transform.localScale = scale;	
 	}
 
 
@@ -128,26 +108,5 @@ public class ItemDataGUI : MonoBehaviour {
 			shown = false;
 			Go.to (this, 1f, new TweenConfig ().vector3Prop ("LocalPosition", hidepoint.transform.position).setEaseType (EaseType.CubicInOut));
 		}
-	}
-
-	public static string getFileName(PeopleScript ps){
-		string filename = "";
-
-		switch (ps.genre) {
-			case PeopleScript.Genre.Male:	filename+="h"; break;
-			case PeopleScript.Genre.Female:	filename+="m"; break;
-		}
-		switch (ps.age) {
-			case PeopleScript.Age.Young:	filename+="j"; break;
-			case PeopleScript.Age.Adult:	filename+="a"; break;
-			case PeopleScript.Age.Old:		filename+="an"; break;
-		}
-		switch (ps.socialClass) {
-			case PeopleScript.SocialClass.Low:		filename+="p"; break;
-			case PeopleScript.SocialClass.Middle:	filename+="n"; break;
-			case PeopleScript.SocialClass.Gentry:	filename+="b"; break;
-		}
-
-		return filename;
 	}
 }

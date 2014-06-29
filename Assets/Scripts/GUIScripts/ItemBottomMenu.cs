@@ -3,12 +3,19 @@ using System.Collections.Generic;
 
 public class ItemBottomMenu : MonoBehaviour {
 
+	SabioGUI sbg;
 	BuyingScript controller;
 	public void setController(BuyingScript controller){
 		this.controller = controller;
 	}
 
-	int ImgWidth, ImgHeight, screenWidth, screenHeight;
+	private bool inspectionenabled = true;
+
+	private Vector2 targetScreenSize = new Vector2(480, 850);
+	public Vector2 size = new Vector2(480, 255);
+	private Vector2 scale;
+
+	public Vector2 publicscale;
 	
 	public List<Item> items;
 
@@ -18,20 +25,16 @@ public class ItemBottomMenu : MonoBehaviour {
 
 	public Texture2D yes, yespress, yesdis, no, nopress, nodis;
 
+	public Texture2D sabio, sabiodisabled, inspeccionar, inspeccionardisabled;
+
+	private AudioClip cash;
+
 	// Use this for initialization
 	void Start () {
-		
-		ImgWidth = 480;
-		ImgHeight = 255;
-		screenWidth = Screen.width;
-		screenHeight = Screen.height;
+		scale = new Vector2(0.0001f, 0.0001f);
+		cash = Resources.Load<AudioClip> ("cash");
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-	
+
 	void OnGUI () {
 		
 		Matrix4x4 bc = GUI.matrix;
@@ -43,25 +46,58 @@ public class ItemBottomMenu : MonoBehaviour {
 		Vector2 guipoint = GUIUtility.ScreenToGUIPoint(point);
 		guipoint.y = Screen.height - guipoint.y;
 		transform.position = guipoint;
+		
+		float rx = (Screen.width / (float)targetScreenSize.x)*scale.x;
+		float ry = (Screen.height/ (float)targetScreenSize.y)*scale.y;
 
-		GUI.matrix = transform.localToWorldMatrix;
+		publicscale = new Vector2 (rx, ry);
 
-		GUI.DrawTexture (new Rect (0, 0, ImgWidth, ImgHeight), fondo);
+		GUI.depth = 2;
+		GUI.matrix = Matrix4x4.TRS (guipoint, Quaternion.identity, new Vector3 (rx, ry, 1));
+
+		GUIStyle bottombutton = Resources.Load<GUISkin> ("pix2").GetStyle ("BottomButton");
+		GUIStyle bottombuttondisabled = Resources.Load<GUISkin> ("pix2").GetStyle ("BottomButtonDisabled");
+
+		GUI.DrawTexture (new Rect (0, 0, size.x, size.y), fondo);
+
 
 		if (this.showingitem != null) {
-			GUI.TextArea (new Rect (21, 35, 215, 59), showingitem.buyingPrice.ToString(), Resources.Load<GUISkin> ("pix").GetStyle ("ItemGUIMoney"));
+			if(GUI.Button (new Rect (size.x-sabio.width-16-30,-sabio.height-12,sabio.width+16,sabio.height+12), sabio, bottombutton)){
+				if(sbg==null)
+					sbg = this.gameObject.AddComponent<SabioGUI>();
+
+				sbg.readingLevel = controller.SabioReadingLevel;
+
+				if(sbg.shown){
+					sbg.hide();
+				}else{
+					sbg.item = showingitem;
+					sbg.show();
+				}
+			}
+			if(inspectionenabled){
+				if(GUI.Button (new Rect (size.x-(2f*sabio.width)-32-45,-inspeccionar.height-12,inspeccionar.width+16,inspeccionar.height+12),inspeccionar, bottombutton)){
+					ItemInspectorGUI inspector = this.gameObject.AddComponent<ItemInspectorGUI>();
+					inspector.ibm = this;
+					inspector.item = this.showingitem;
+				}
+			}else{
+				GUI.Button (new Rect (size.x-(2f*sabio.width)-32-45,-inspeccionar.height-12,inspeccionar.width+16,inspeccionar.height+12),inspeccionardisabled, bottombuttondisabled);
+			}
+			GUI.TextArea (new Rect (16, 16, 220, 95), showingitem.buyingPrice.ToString(), Resources.Load<GUISkin> ("pix").GetStyle ("ItemGUIMoney"));
 			if(GUI.Button (new Rect (255, 16, 95, 95), "", Resources.Load<GUISkin> ("pix").GetStyle ("NoButton"))){
-				this.showingitem=null;
-				controller.next();
+				next ();
 			}
 			if(GUI.Button (new Rect (367, 16, 95, 95), "", Resources.Load<GUISkin> ("pix").GetStyle ("YesButton"))){
 				for(int i = 0; i<items.Count; i++)
 					if(items[i]==null){ items[i] = showingitem; break;}
-				this.showingitem=null; 
-				controller.next();
+				audio.PlayOneShot(cash);
+				next ();
 			}
 		} else {
-			GUI.TextArea (new Rect (21, 35, 215, 59), "", Resources.Load<GUISkin> ("pix").GetStyle ("ItemGUIMoney"));
+			GUI.Button (new Rect (size.x-sabio.width-16-30,-sabio.height-12,sabio.width+16,sabio.height+12), sabiodisabled, bottombuttondisabled);
+			GUI.Button (new Rect (size.x-(2f*sabio.width)-32-45,-inspeccionar.height-12,inspeccionar.width+16,inspeccionar.height+12),inspeccionardisabled, bottombuttondisabled);
+			GUI.TextArea (new Rect (16, 16, 220, 95), "", Resources.Load<GUISkin> ("pix").GetStyle ("ItemGUIMoney"));
 			GUI.Button (new Rect (255, 16, 95, 95), "", Resources.Load<GUISkin> ("pix").GetStyle ("NoButtonDisabled"));
 			GUI.Button (new Rect (367, 16, 95, 95), "", Resources.Load<GUISkin> ("pix").GetStyle ("YesButtonDisabled"));
 		}
@@ -84,5 +120,21 @@ public class ItemBottomMenu : MonoBehaviour {
 		
 		transform.position = pos;
 		transform.localScale = scale;
+	}
+
+	public void next(){
+		if(sbg!=null)
+			sbg.hide();
+		inspectionenabled = true;
+		controller.next();
+	}
+
+	public void correctInspection(){
+		if (showingitem.type == Item.Type.normal) {
+			showingitem.activateDiscounts();
+			inspectionenabled = false;
+		}else if (showingitem.type == Item.Type.art){
+			controller.detener();
+		}
 	}
 }

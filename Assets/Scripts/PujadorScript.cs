@@ -44,6 +44,8 @@ public class PujadorScript : MonoBehaviour {
 	public AnimationCurve FrenzyProbabilityCurve;
 	public AnimationCurve LikeProbabilityCurve;
 
+	public float extraProbability = 1f;
+
 	public enum PujadorState {
 		Waiting, Normal, Fighting, Leaving
 	}
@@ -98,10 +100,11 @@ public class PujadorScript : MonoBehaviour {
 					
 					if(actualTime <= 0){
 						
-						float probability = PriceProbabilityCurve.Evaluate(auct.price / money) *
+						float probability = extraProbability * 
+							PriceProbabilityCurve.Evaluate(auct.price / money) *
 							BidProbabilityCurve.Evaluate(auct.bid / maxBid) *
-								FrenzyProbabilityCurve.Evaluate(frenzy) *
-								LikeProbabilityCurve.Evaluate(scorer.getItemScore(people, Auction.currentAuction.items[Auction.currentAuction.currentSlot]));
+							FrenzyProbabilityCurve.Evaluate(frenzy) *
+							LikeProbabilityCurve.Evaluate(scorer.getItemScore(people, Auction.currentAuction.items[Auction.currentAuction.currentSlot]));
 						
 						
 						if(Random.Range(0f,1f) < probability){

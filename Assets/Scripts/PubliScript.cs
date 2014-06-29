@@ -4,17 +4,22 @@ using System.Collections.Generic;
 
 public class PubliScript : MonoBehaviour {
 
+	private PubliGUI publi;
 	// Use this for initialization
 	void Start () {
 
-		PubliGUI publi = GameObject.FindObjectOfType<PubliGUI>();
+		publi = GameObject.FindObjectOfType<PubliGUI>();
 		publi.enabled = true;
 		publi.setController(this);
 	}
-	
+
+	public float maxMoney = 5000;
+	public float minMoney = 0;
+
 	// Update is called once per frame
 	void Update () {
-	
+		publi.maxMoney = maxMoney;
+		publi.minMoney = minMoney;
 	}
 
 	public static int chooseRandom(params float[] posibilities){

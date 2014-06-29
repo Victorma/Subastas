@@ -70,7 +70,7 @@ public class AuctionEndGUI : MonoBehaviour {
 			GUILayout.Label("Ganador", GUILayout.Height(25));
 
 			GUIStyle customStyle = new GUIStyle();
-			customStyle.normal.background = Resources.Load<Texture2D> ("buyarea/frontales/"+ItemDataGUI.getFileName(persona));
+			customStyle.normal.background = Resources.Load<Texture2D> ("buyarea/frontales/"+SabioGUI.getFileName(persona));
 			GUILayout.Box("",  customStyle, GUILayout.ExpandWidth(false), GUILayout.Width(75), GUILayout.Height(75));
 
 			GUILayout.EndVertical();
